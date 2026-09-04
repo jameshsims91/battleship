@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battleship</title>
+  </head>
+  <body>
+    <main>
+      <h1>Battleship</h1>
+
+      <div class="game-status">
+        <div class="status-card">
+          <span class="status-label">Phase</span>
+          <strong id="game-phase">Placement</strong>
+        </div>
+
+        <div class="status-card">
+          <span class="status-label">Turn</span>
+          <strong id="turn-status">Your turn</strong>
+        </div>
+
+        <div class="status-card">
+          <span class="status-label">Your ships</span>
+          <strong id="player-ships-remaining">5 remaining</strong>
+        </div>
+
+        <div class="status-card">
+          <span class="status-label">Enemy ships</span>
+          <strong id="enemy-ships-remaining">5 remaining</strong>
+        </div>
+      </div>
+
+      <p id="game-message">Place your ships before attacking.</p>
+
+      <button id="new-game-button" type="button">New Game</button>
+
+      <section id="placement-section">
+        <div id="placement-controls">
+          <h2>Place Your Ships</h2>
+
+          <p id="placement-message">
+            Select a direction, then click a starting cell on your board.
+          </p>
+
+          <div id="selected-ship">
+            <span class="status-label">Selected ship</span>
+            <strong id="selected-ship-name">Carrier</strong>
+          </div>
+
+          <div id="remaining-ships">
+            <span class="status-label">Remaining ships</span>
+            <ul id="remaining-ships-list"></ul>
+          </div>
+
+          <button id="direction-button" type="button">
+            Direction: Horizontal
+          </button>
+        </div>
+
+        <h2>Your Board</h2>
+        <div id="player-board"></div>
+      </section>
+
+      <section>
+        <h2>Enemy Board</h2>
+        <div id="computer-board"></div>
+      </section>
+
+      <section id="ship-legend">
+        <h2>Ship Legend</h2>
+        <div class="ship-legend-list">
+          <div class="ship-legend-item">
+            <span class="ship-color carrier"></span>
+            <span>Carrier</span>
+            <span class="ship-length">5 cells</span>
+          </div>
+
+          <div class="ship-legend-item">
+            <span class="ship-color battleship"></span>
+            <span>Battleship</span>
+            <span class="ship-length">4 cells</span>
+          </div>
+
+          <div class="ship-legend-item">
+            <span class="ship-color cruiser"></span>
+            <span>Cruiser</span>
+            <span class="ship-length">3 cells</span>
+          </div>
+
+          <div class="ship-legend-item">
+            <span class="ship-color submarine"></span>
+            <span>Submarine</span>
+            <span class="ship-length">3 cells</span>
+          </div>
+
+          <div class="ship-legend-item">
+            <span class="ship-color destroyer"></span>
+            <span>Destroyer</span>
+            <span class="ship-length">2 cells</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
