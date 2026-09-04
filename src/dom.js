@@ -1,4 +1,4 @@
-function createBoardElement(gameboard, isEnemy = false) {
+function createBoardElement(gameboard, isEnemy = false, hideShips = false) {
   const boardWrapper = document.createElement('div');
   boardWrapper.classList.add('board-wrapper');
 
@@ -56,7 +56,7 @@ function createBoardElement(gameboard, isEnemy = false) {
 
       const ship = gameboard.board[y][x];
 
-      if (ship && !isEnemy) {
+      if (ship && !isEnemy && !hideShips) {
         cell.classList.add('ship');
       }
 
@@ -123,14 +123,21 @@ function previewShip(boardElement, start, length, direction) {
   });
 }
 
-function renderBoards(player, computer) {
+function renderBoards(
+  player,
+  computer,
+  hidePlayerShips = false,
+  hideComputerShips = false,
+) {
   const playerBoardContainer = document.querySelector('#player-board');
   const computerBoardContainer = document.querySelector('#computer-board');
 
-  playerBoardContainer.replaceChildren(createBoardElement(player.gameboard));
+  playerBoardContainer.replaceChildren(
+    createBoardElement(player.gameboard, false, hidePlayerShips),
+  );
 
   computerBoardContainer.replaceChildren(
-    createBoardElement(computer.gameboard, true),
+    createBoardElement(computer.gameboard, true, hideComputerShips),
   );
 }
 

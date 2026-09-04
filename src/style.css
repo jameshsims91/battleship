@@ -74,6 +74,34 @@ section > h2 {
   margin-bottom: 1rem;
 }
 
+.boards-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #1d3a59;
+  border-radius: 1.25rem;
+  background: rgba(14, 31, 51, 0.82);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.2);
+}
+
+.boards-container #placement-controls {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.boards-container > section {
+  min-width: 0;
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 #placement-controls {
   margin-bottom: 1.25rem;
   padding: 1rem;
@@ -225,6 +253,17 @@ section > h2 {
   .board-layout {
     grid-template-columns: 1.1rem minmax(0, 1fr);
     gap: 0.2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .boards-container {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .boards-container #placement-controls {
+    grid-column: 1;
   }
 }
 
@@ -438,4 +477,135 @@ section > h2 {
   .ship-legend-item:last-child {
     grid-column: 1 / -1;
   }
+}
+
+.result-screen {
+  margin: 0 auto 2rem;
+  padding: 2.5rem 1.5rem;
+  border: 1px solid #397fc1;
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, #12395d, #0b1d31);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.result-screen[hidden] {
+  display: none;
+}
+
+.result-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  border: 2px solid #63b3ed;
+  border-radius: 50%;
+  color: #9be7ff;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.result-icon::before {
+  content: '✓';
+}
+
+.result-screen.defeat {
+  border-color: #a83c48;
+  background: linear-gradient(145deg, #4a202c, #0b1d31);
+}
+
+.result-screen.defeat .result-icon {
+  border-color: #ff8585;
+  color: #ffb0b0;
+}
+
+.result-screen.defeat .result-icon::before {
+  content: '×';
+}
+
+.result-screen h2 {
+  margin-bottom: 0.75rem;
+  color: #f8fbff;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+}
+
+.result-screen p {
+  margin: 0 auto 1.5rem;
+  max-width: 32rem;
+}
+
+#result-new-game-button {
+  border: 1px solid #63b3ed;
+  border-radius: 0.65rem;
+  padding: 0.8rem 1.25rem;
+  background: #174d7c;
+  color: #f4f9ff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+#result-new-game-button:hover {
+  border-color: #9be7ff;
+  background: #21669e;
+  transform: translateY(-1px);
+}
+
+.handoff-screen {
+  margin: 0 auto 2rem;
+  padding: 2.5rem 1.5rem;
+  border: 1px solid #397fc1;
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, #12395d, #0b1d31);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.handoff-screen[hidden] {
+  display: none;
+}
+
+.handoff-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  border: 2px solid #63b3ed;
+  border-radius: 50%;
+  color: #9be7ff;
+  font-size: 2rem;
+}
+
+.handoff-screen h2 {
+  margin-bottom: 0.75rem;
+  color: #f8fbff;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+}
+
+.handoff-screen p {
+  max-width: 32rem;
+  margin: 0 auto 1.5rem;
+}
+
+#handoff-continue-button {
+  border: 1px solid #63b3ed;
+  border-radius: 0.65rem;
+  padding: 0.8rem 1.25rem;
+  background: #174d7c;
+  color: #f4f9ff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#handoff-continue-button:hover {
+  background: #21669e;
 }

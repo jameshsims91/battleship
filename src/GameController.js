@@ -1,9 +1,10 @@
 import Player from './Player.js';
 
 class GameController {
-  constructor() {
-    this.player = new Player('real');
-    this.computer = new Player('computer');
+  constructor(mode = 'computer') {
+    this.mode = mode;
+    this.player = new Player('player');
+    this.computer = new Player(mode === 'player' ? 'player' : 'computer');
     this.currentPlayer = this.player;
     this.gameOver = false;
     this.winner = null;
@@ -12,18 +13,20 @@ class GameController {
   }
 
   setupGame() {
-    const shipLengths = [5, 4, 3, 3, 2];
+    if (this.mode === 'computer') {
+      const fleet = [5, 4, 3, 3, 2];
 
-    shipLengths.forEach((length) => {
-      this.placeComputerShip(length);
-    });
+      fleet.forEach((length) => {
+        this.placeComputerShip(length);
+      });
+    }
   }
 
   placeComputerShip(length) {
     let placed = false;
 
     while (!placed) {
-      const direction = Math.random() < 0.5 ? 'horizonal' : 'vertical';
+      const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
 
       const x = Math.floor(Math.random() * 10);
       const y = Math.floor(Math.random() * 10);
@@ -36,49 +39,56 @@ class GameController {
     return this.player.gameboard.placeShip(length, start, direction);
   }
 
+  placeSecondPlayerShip(length, start, direction = 'horizontal') {
+    return this.computer.gameboard.placeShip(length, start, direction);
+  }
+
   playTurn(coordinates) {
-    if (this.gameOver || this.currentPlayer !== this.player) {
-      return null;
-    }
-    const result = this.computer.gameboard.receiveAttack(coordinates);
+    const attackingPlayer = this.currentPlayer;
+    const defendingPlayer =
+      attackingPlayer === this.player ? this.computer : this.player;
+
+    const result = defendingPlayer.gameboard.receiveAttack(coordinates);
 
     if (result === null) {
       return null;
     }
 
-    if (this.computer.gameboard.allShipsSunk()) {
+    if (defendingPlayer.gameboard.allShipsSunk()) {
       this.gameOver = true;
-      this.winner = this.player;
+      this.winner = attackingPlayer;
       return result;
     }
 
-    this.currentPlayer = this.computer;
+    // Only switch players after a miss.
+    if (result === false) {
+      this.currentPlayer = defendingPlayer;
+    }
 
-    this.playComputerTurn();
+    if (this.mode === 'computer' && this.currentPlayer === this.computer) {
+      this.playComputerTurn();
+    }
 
     return result;
   }
 
   playComputerTurn() {
-    if (this.gameOver) {
-      return;
+    const move = this.computer.getRandomMove(this.player.gameboard);
+
+    if (!move) {
+      return null;
     }
 
-    const move = this.computer.getRandomMove();
-
-    if (move === null) {
-      return;
-    }
-
-    this.player.gameboard.receiveAttack(move);
+    const result = this.player.gameboard.receiveAttack(move);
 
     if (this.player.gameboard.allShipsSunk()) {
       this.gameOver = true;
       this.winner = this.computer;
-      return;
+      return result;
     }
 
     this.currentPlayer = this.player;
+    return result;
   }
 }
 
