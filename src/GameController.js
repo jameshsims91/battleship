@@ -65,10 +65,6 @@ class GameController {
       this.currentPlayer = defendingPlayer;
     }
 
-    if (this.mode === 'computer' && this.currentPlayer === this.computer) {
-      this.playComputerTurn();
-    }
-
     return result;
   }
 

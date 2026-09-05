@@ -459,9 +459,7 @@ function handleBattleBoardClick(event) {
     showMessage('Hit! You get to attack again.');
   } else {
     showMessage(
-      isPlayerVsPlayer()
-        ? 'Miss! Pass the turn to the other player.'
-        : 'Miss! The computer is taking its turn.',
+      isPlayerVsPlayer() ? 'Miss! Pass the turn to the other player.' : 'Miss!',
     );
   }
 
@@ -473,6 +471,33 @@ function handleBattleBoardClick(event) {
   }
 
   renderGame();
+
+  // In computer mode, let the player see the result before
+  // the computer takes its turn.
+  if (
+    !isPlayerVsPlayer() &&
+    result === false &&
+    gameController.currentPlayer === gameController.computer
+  ) {
+    showMessage('Miss! THe computer is taking its turn.');
+    setTimeout(() => {
+      const computerResult = gameController.playComputerTurn();
+      if (gameController.gameOver) {
+        showMessage('The computer sank your fleet.');
+        updateGameStatus();
+        renderGame();
+        showResultScreen();
+        return;
+      }
+      if (computerResult) {
+        showMessage('THe computer hit your ship!');
+      } else {
+        showMessage('The computer missed. Your turn.');
+      }
+      updateGameStatus();
+      renderGame();
+    }, 700);
+  }
 }
 
 function handleDirectionClick() {
