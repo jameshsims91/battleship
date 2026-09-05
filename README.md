@@ -13,6 +13,7 @@ A browser-based Battleship game built with JavaScript, Webpack, HTML, and CSS.
 
 ```bash
 npm install
+```
 
 MIT License
 
