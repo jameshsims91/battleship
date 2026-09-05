@@ -4,7 +4,7 @@ import './style.css';
 
 const shipLengths = [5, 4, 3, 3, 2];
 
-let gameController = new GameController();
+let gameController = new GameController('computer');
 let currentShipIndex = 0;
 let direction = 'horizontal';
 let placementPhase = 'player-one';
@@ -69,6 +69,14 @@ function updatePlacementFeedback() {
   });
 }
 
+function updatePlacementControls() {
+  const placementControls = document.querySelector('#placement-controls');
+
+  if (!placementControls) return;
+
+  placementControls.hidden = placementPhase === 'battle';
+}
+
 function renderGame() {
   if (placementPhase === 'player-two') {
     renderBoards(gameController.computer, gameController.player, false, true);
@@ -76,12 +84,10 @@ function renderGame() {
   }
 
   if (placementPhase === 'battle') {
-    if (gameController.currentPlayer === gameController.computer) {
-      renderBoards(gameController.computer, gameController.player, false, true);
-    } else {
-      renderBoards(gameController.player, gameController.computer, false, true);
-    }
-
+    // Keep the physical boards in the same positions.
+    // Player 1's board is always on the left.
+    // The computer's board is always on the right.
+    renderBoards(gameController.player, gameController.computer, false, true);
     return;
   }
 
@@ -89,9 +95,9 @@ function renderGame() {
 }
 
 function updatePlacementMessage() {
-  const placementMessage = document.querySelector('#placement-message');
+  const gameMessage = document.querySelector('#game-message');
 
-  if (!placementMessage) return;
+  if (!gameMessage) return;
 
   if (placementPhase === 'battle') {
     if (isPlayerVsPlayer()) {
@@ -100,17 +106,16 @@ function updatePlacementMessage() {
           ? 'Player 1'
           : 'Player 2';
 
-      placementMessage.textContent = `${playerName}'s turn. Attack the enemy board.`;
+      gameMessage.textContent = `${playerName}'s turn. Attack the enemy board.`;
     } else {
-      placementMessage.textContent = 'Your turn. Attack the enemy board.';
+      gameMessage.textContent = 'Your turn. Attack the enemy board.';
     }
 
     return;
   }
 
   const playerName = getPlacementLabel();
-
-  placementMessage.textContent = `${playerName}, place your ships.`;
+  gameMessage.textContent = `${playerName}, place your ships.`;
 }
 
 function updateGameStatus() {
@@ -332,6 +337,7 @@ function finishPlacementPhase() {
   }
 
   placementPhase = 'battle';
+  updatePlacementControls();
   currentShipIndex = 0;
   direction = 'horizontal';
   previewStart = null;
@@ -433,7 +439,6 @@ function handleBattleBoardClick(event) {
   const clickedBoard = event.currentTarget.id;
 
   // The enemy board is always the physical computer-board.
-  // renderGame() swaps which player's data is displayed there.
   if (clickedBoard !== 'computer-board') return;
 
   const x = Number(event.target.dataset.x);
@@ -479,9 +484,15 @@ function handleBattleBoardClick(event) {
     result === false &&
     gameController.currentPlayer === gameController.computer
   ) {
-    showMessage('Miss! THe computer is taking its turn.');
+    showMessage('Miss! The computer is taking its turn.');
+
     setTimeout(() => {
-      const computerResult = gameController.playComputerTurn();
+      let computerResult = gameController.playComputerTurn();
+
+      while (computerResult === true && !gameController.gameOver) {
+        computerResult = gameController.playComputerTurn();
+      }
+
       if (gameController.gameOver) {
         showMessage('The computer sank your fleet.');
         updateGameStatus();
@@ -489,11 +500,11 @@ function handleBattleBoardClick(event) {
         showResultScreen();
         return;
       }
-      if (computerResult) {
-        showMessage('THe computer hit your ship!');
-      } else {
+
+      if (computerResult === false) {
         showMessage('The computer missed. Your turn.');
       }
+
       updateGameStatus();
       renderGame();
     }, 700);
@@ -518,6 +529,7 @@ function handleNewGameClick() {
   currentShipIndex = 0;
   direction = 'horizontal';
   placementPhase = 'player-one';
+  updatePlacementControls();
   previewStart = null;
 
   document.querySelector('#direction-button').textContent =
@@ -574,3 +586,4 @@ updatePlacementMessage();
 updatePlacementFeedback();
 updateGameStatus();
 renderGame();
+updatePlacementControls();

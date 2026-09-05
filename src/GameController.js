@@ -3,8 +3,11 @@ import Player from './Player.js';
 class GameController {
   constructor(mode = 'computer') {
     this.mode = mode;
+
     this.player = new Player('player');
+
     this.computer = new Player(mode === 'player' ? 'player' : 'computer');
+
     this.currentPlayer = this.player;
     this.gameOver = false;
     this.winner = null;
@@ -13,13 +16,15 @@ class GameController {
   }
 
   setupGame() {
-    if (this.mode === 'computer') {
-      const fleet = [5, 4, 3, 3, 2];
-
-      fleet.forEach((length) => {
-        this.placeComputerShip(length);
-      });
+    if (this.mode !== 'computer') {
+      return;
     }
+
+    const fleet = [5, 4, 3, 3, 2];
+
+    fleet.forEach((length) => {
+      this.placeComputerShip(length);
+    });
   }
 
   placeComputerShip(length) {
@@ -45,6 +50,7 @@ class GameController {
 
   playTurn(coordinates) {
     const attackingPlayer = this.currentPlayer;
+
     const defendingPlayer =
       attackingPlayer === this.player ? this.computer : this.player;
 
@@ -60,7 +66,8 @@ class GameController {
       return result;
     }
 
-    // Only switch players after a miss.
+    // A hit allows the same player to attack again.
+    // A miss switches to the other player.
     if (result === false) {
       this.currentPlayer = defendingPlayer;
     }
@@ -69,7 +76,7 @@ class GameController {
   }
 
   playComputerTurn() {
-    const move = this.computer.getRandomMove(this.player.gameboard);
+    const move = this.computer.getComputerMove(this.player.gameboard);
 
     if (!move) {
       return null;
@@ -83,7 +90,14 @@ class GameController {
       return result;
     }
 
-    this.currentPlayer = this.player;
+    if (result) {
+      this.computer.rememberHit(move, this.player.gameboard);
+
+      this.currentPlayer = this.computer;
+    } else {
+      this.currentPlayer = this.player;
+    }
+
     return result;
   }
 }

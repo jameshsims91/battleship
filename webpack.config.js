@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  mode: 'development',
+  mode: 'production',
 
   entry: './src/index.js',
 
@@ -15,6 +15,7 @@ export default {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath: './',
   },
 
   module: {
@@ -45,11 +46,12 @@ export default {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
+
     port: 8080,
     open: true,
     hot: true,
     watchFiles: ['./src/template.html'],
   },
 
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
 };
